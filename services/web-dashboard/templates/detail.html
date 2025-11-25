@@ -1,0 +1,71 @@
+{{define "content"}}
+
+<div class="row mb-3 align-items-center">
+    <div class="col-md-8">
+        <h2>{{.Sensor.Name}} <span class="text-muted fs-5">Historie</span></h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <div class="btn-group">
+            <a href="?range=1h" class="btn btn-outline-secondary {{if eq .Range "1h"}}active{{end}}">1h</a>
+            <a href="?range=24h" class="btn btn-outline-secondary {{if eq .Range "24h"}}active{{end}}">24h</a>
+            <a href="?range=168h" class="btn btn-outline-secondary {{if eq .Range "168h"}}active{{end}}">7d</a>
+        </div>
+        <a href="/" class="btn btn-secondary ms-2">Zpět</a>
+    </div>
+</div>
+
+<div class="card shadow-sm p-3">
+    <canvas id="historyChart" style="max-height: 400px;"></canvas>
+</div>
+
+<script>
+    /*
+       OPRAVA: Použití funkce 'to_json'.
+       Původně: const rawData = {{ .Points }}; -> Vypisovalo Go strukturu (chyba syntaxe JS).
+       Nově:    const rawData = {{ .Points | to_json }}; -> Vypíše validní JSON string.
+       
+       Výsledek v prohlížeči bude vypadat takto:
+       const rawData = [{"t":"2025-11-24T20:00:00Z","v":24.5}, ...];
+    */
+    const rawData = {{ .Points | to_json }}; 
+    
+    console.log("Data pro graf:", rawData); // Pro debugging v konzoli prohlížeče (F12)
+
+    if (!rawData || rawData.length === 0) {
+        console.warn("Žádná data pro graf");
+    } else {
+        // ... zbytek skriptu beze změn ...
+        const labels = rawData.map(p => {
+             // Pozor: Timestamp z JSONu je string, musíme udělat new Date()
+            const d = new Date(p.t);
+            return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        });
+        
+        const dataValues = rawData.map(p => p.v);
+        
+        const ctx = document.getElementById('historyChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Hodnota ({{.Sensor.Unit}})',
+                    data: dataValues,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true, 
+                scales: {
+                    x: { display: true },
+                    y: { beginAtZero: false }
+                }
+            }
+        });
+    }
+</script>
+
+{{end}}

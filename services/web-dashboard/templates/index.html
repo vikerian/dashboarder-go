@@ -1,0 +1,49 @@
+{{define "content"}}
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Přehled senzorů</h2>
+        <p class="text-muted">Živá data načtená z API (zdroj: Valkey Cache)</p>
+    </div>
+
+    {{range .Sensors}}
+    <div class="col-md-4 mb-4">
+        <div class="card sensor-card shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{.Name}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{.Type}}</h6>
+                
+                <div class="display-4 my-3">
+                    {{if .CurrentValue}}
+                        {{printf "%.1f" (deref .CurrentValue)}} 
+                        <small class="fs-6">{{.Unit}}</small>
+                    {{else}}
+                        <span class="text-muted" style="font-size: 0.5em">-- čekám na data --</span>
+                    {{end}}
+                </div>
+
+                <a href="/sensor/{{.ID}}" class="btn btn-outline-primary btn-sm">Graf Historie</a>
+                
+                <div class="mt-2 text-muted" style="font-size: 0.7em">
+                    Topic: <code>{{.Topic}}</code>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+        <div class="col-12">
+            <div class="alert alert-warning">
+                ⚠️ Žádné senzory nebyly nalezeny. Běží služba home-api a databáze?
+            </div>
+        </div>
+    {{end}}
+</div>
+
+<script>
+    // Obnov stránku každých 10 sekund (10000 ms)
+    setTimeout(function(){
+       window.location.reload();
+    }, 10000);
+</script>
+
+{{end}}
