@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
@@ -13,12 +14,33 @@ import (
 )
 
 func main() {
-	// 1. Setup Logger (JSON format pro produkční logování)
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	// Načtení Konfigurace
+	cfg := LoadConfig()
+	// MQTT Client musí být inicializován DŘÍVE než Logger, pokud chceme logovat start!
+	// To je problém slepice-vejce.
+	// ŘEŠENÍ: Nejprve uděláme klienta, pak logger.
+
+	opts := mqtt.NewClientOptions().AddBroker(cfg.MQTTBroker).SetClientID(cfg.MQTTClientID)
+	client := mqtt.NewClient(opts)
+	if token := client.Connect(); token.Wait() && token.Error() != nil {
+		// Fallback: Pokud nejde MQTT, logujeme jen na stdout a končíme
+		slog.Error("Fatal MQTT Error", "err", token.Error())
+		os.Exit(1)
+	}
+
+	// --- SETUP LOGGERU ---
+	// 1. Writer pro MQTT
+	mqttWriter := NewMqttLogWriter(client, "sensor-ingestor")
+
+	// 2. MultiWriter: Píše do obou (Stdout + MQTT)
+	multi := io.MultiWriter(os.Stdout, mqttWriter)
+
+	// 3. Vytvoření loggeru s tímto multi-writerem
+	logger := slog.New(slog.NewJSONHandler(multi, nil))
 	slog.SetDefault(logger)
 
-	// 2. Načtení Konfigurace
-	cfg := LoadConfig()
+	logger.Info("Ingestor startuje (Loguji do MQTT i Stdout)")
+
 	logger.Info("Spouštím službu Sensor Ingestor", "config", cfg)
 
 	// 3. Inicializace DB Connection Pool
@@ -51,9 +73,9 @@ func main() {
 	go startHealthServer(cfg.HTTPPort, logger)
 
 	// 6. Nastavení MQTT Klienta
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker(cfg.MQTTBroker)
-	opts.SetClientID(cfg.MQTTClientID)
+	//opts := mqtt.NewClientOptions()
+	//opts.AddBroker(cfg.MQTTBroker)
+	//opts.SetClientID(cfg.MQTTClientID)
 
 	// --- HLAVNÍ LOOP ZPRACOVÁNÍ ZPRÁV ---
 	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
@@ -79,11 +101,6 @@ func main() {
 		}
 	})
 
-	client := mqtt.NewClient(opts)
-	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		logger.Error("Nelze se připojit k MQTT brokeru", "error", token.Error())
-		os.Exit(1)
-	}
 	// Odpojení s timeoutem 250ms při ukončení
 	defer client.Disconnect(250)
 

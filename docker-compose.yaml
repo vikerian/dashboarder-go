@@ -150,3 +150,16 @@ services:
     pid: "host"
     networks:
       appnet:
+
+  log-collector:
+    build:
+      context: ./services/log-collector
+      dockerfile: Dockerfile
+    container_name: log-collector
+    restart: unless-stopped
+    depends_on: 
+      - mqtt
+    volumes:
+      - "/srv/logs:/var/log/iot-app"
+    networks:
+      appnet:
