@@ -59,7 +59,7 @@ services:
       - "POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db"
       - "MQTT_BROKER=tcp://mqtt:1883"
       - "MQTT_CLIENT_ID=ingestor_service"
-      - "INPUT_TOPIC=/msh/internal_temp/+"
+      - "INPUT_TOPIC=/msh/#"
       - "OUTPUT_TOPIC=/events/data"
       - "LOG_LEVEL=DEBUG"
     # Healthcheck volá náš Go endpoint /health
@@ -130,5 +130,23 @@ services:
       # Mapování host:container.
       # Aplikaci uvidíš na http://localhost:3000
       - "3000:3000"
+    networks:
+      appnet:
+  
+  system-monitor:
+    build:
+      context: ./services/system-monitor
+      dockerfile: Dockerfile
+    container_name: system-monitor
+    restart: unless-stopped
+    depends_on:
+      - mqtt
+      - sensor-ingestor # Abychom neposílali data dřív, než je ingestor ready
+    environment:
+      - MQTT_BROKER=tcp://mqtt:1883
+      - MONITOR_INTERVAL=60s
+    # TOTO JE KLÍČOVÉ: Zpřístupní procesy hostitele kontejneru.
+    # Bez toho by gopsutil viděl jen sebe sama (PID 1).
+    pid: "host"
     networks:
       appnet:

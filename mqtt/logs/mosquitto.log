@@ -381,3 +381,45 @@
 1764054135: New client connected from 192.168.255.69:52098 as ingestor_service (p2, c1, k30).
 1764054149: New connection from 192.168.255.65:59634 on port 1883.
 1764054149: New client connected from 192.168.255.65:59634 as LK313946D (p2, c1, k60).
+1764058595: Client data-persister disconnected.
+1764058595: Client ingestor_service disconnected.
+1764058596: mosquitto version 2.0.22 terminating
+1764058602: mosquitto version 2.0.22 starting
+1764058602: Config loaded from /mosquitto/config/mosquitto.conf.
+1764058602: Opening ipv4 listen socket on port 1883.
+1764058602: Opening ipv6 listen socket on port 1883.
+1764058602: mosquitto version 2.0.22 running
+1764058602: New connection from 192.168.255.134:36930 on port 1883.
+1764058602: New client connected from 192.168.255.134:36930 as ingestor_service (p2, c1, k30).
+1764058602: New connection from 192.168.255.135:37084 on port 1883.
+1764058602: New client connected from 192.168.255.135:37084 as data-persister (p2, c1, k30).
+1764058602: New connection from 192.168.255.137:53640 on port 1883.
+1764058602: New client connected from 192.168.255.137:53640 as system-monitor (p2, c1, k30).
+1764058619: New connection from 192.168.255.129:43484 on port 1883.
+1764058619: New client connected from 192.168.255.129:43484 as LK313946D (p2, c1, k60).
+1764058773: New connection from 192.168.255.129:37958 on port 1883.
+1764058773: New client connected from 192.168.255.129:37958 as auto-2D6E738E-CC63-A5F1-D230-ABF9F230E85B (p2, c1, k60).
+1764058932: Client ingestor_service disconnected.
+1764058932: New connection from 192.168.255.134:52996 on port 1883.
+1764058932: New client connected from 192.168.255.134:52996 as ingestor_service (p2, c1, k30).
+1764059196: Client auto-2D6E738E-CC63-A5F1-D230-ABF9F230E85B disconnected.
+1764059385: Client system-monitor disconnected.
+1764059386: New connection from 192.168.255.137:57886 on port 1883.
+1764059386: New client connected from 192.168.255.137:57886 as system-monitor (p2, c1, k30).
+1764059481: New connection from 192.168.255.129:50952 on port 1883.
+1764059481: New client connected from 192.168.255.129:50952 as auto-AD84D04B-1E8F-A5DB-F49E-908EAD4A6950 (p2, c1, k60).
+1764059661: Client auto-AD84D04B-1E8F-A5DB-F49E-908EAD4A6950 disconnected.
+1764059680: Client system-monitor disconnected.
+1764059681: New connection from 192.168.255.137:37516 on port 1883.
+1764059681: New client connected from 192.168.255.137:37516 as system-monitor (p2, c1, k30).
+1764059691: New connection from 192.168.255.129:40410 on port 1883.
+1764059691: New client connected from 192.168.255.129:40410 as auto-AF0E587F-027B-734D-0C24-53079B7A0AA2 (p2, c1, k60).
+1764059796: Client auto-AF0E587F-027B-734D-0C24-53079B7A0AA2 disconnected.
+1764059798: New connection from 192.168.255.129:38282 on port 1883.
+1764059798: New client connected from 192.168.255.129:38282 as auto-32067102-41F1-C05E-BDE0-7E8AA44B75B6 (p2, c1, k60).
+1764059798: Client auto-32067102-41F1-C05E-BDE0-7E8AA44B75B6 disconnected.
+1764059818: Client system-monitor disconnected.
+1764059818: New connection from 192.168.255.137:53570 on port 1883.
+1764059818: New client connected from 192.168.255.137:53570 as system-monitor (p2, c1, k30).
+1764059820: New connection from 192.168.255.129:57562 on port 1883.
+1764059820: New client connected from 192.168.255.129:57562 as auto-7E874CAF-AFAB-D9E2-1945-F131D0226ED4 (p2, c1, k60).

@@ -9,31 +9,41 @@ import (
 	"strconv"
 )
 
-// WebHandler funguje jako Controller v MVC architektuře.
-// Drží reference na služby a připravené HTML šablony.
+// WebHandler řídí zpracování HTTP požadavků.
+// Drží oddělené šablony pro Index a Detail, aby nedocházelo ke kolizím názvů bloků.
 type WebHandler struct {
-	client *APIClient   // Klient pro komunikaci s backend API
-	logger *slog.Logger // Strukturovaný logger
-
-	// ZMĚNA ARCHITEKTURY: Místo jedné proměnné 'tmpl' máme dvě oddělené.
-	// Důvod: Obě stránky (index.html i detail.html) definují blok {{define "content"}}.
-	// Kdybychom je načetli do jedné sady (ParseGlob), jedna by přepsala druhou.
-	// Proto musíme mít pro každou stránku vlastní izolovanou instanci šablony.
-	indexTmpl  *template.Template
-	detailTmpl *template.Template
+	client     *APIClient         // Klient pro volání backend API
+	logger     *slog.Logger       // Logger
+	indexTmpl  *template.Template // Šablona pro Dashboard (přehled)
+	detailTmpl *template.Template // Šablona pro Graf (historie)
 }
 
-// NewWebHandler je konstruktor. Zde probíhá inicializace a parsování šablon (jen jednou při startu).
+// SystemWidgetData je pomocná struktura (ViewModel).
+// Slouží k tomu, abychom v Go kódu seskupili rozházené senzory do jednoho logického celku
+// pro zobrazení "System Status" widgetu v HTML.
+type SystemWidgetData struct {
+	CPUPercent float64 // Vytížení CPU
+
+	RamUsed  float64 // Použitá RAM (MB)
+	RamTotal float64 // Celková RAM (MB)
+	RamFree  float64 // Dopočítaná volná RAM (Total - Used)
+
+	DiskUsed  float64 // Použitý Disk (GB)
+	DiskTotal float64 // Celkový Disk (GB)
+	DiskFree  float64 // Dopočítané volné místo (Total - Used)
+
+	HasData bool // Příznak: True, pokud jsme našli alespoň nějaká systémová data.
+}
+
+// NewWebHandler inicializuje handler a parsuje HTML šablony.
 func NewWebHandler(client *APIClient, logger *slog.Logger) (*WebHandler, error) {
 
 	// 1. DEFINICE POMOCNÝCH FUNKCÍ (FuncMap)
-	// Go šablony jsou záměrně jednoduché ("logic-less"). Složitější operace
-	// musíme definovat jako Go funkce a zpřístupnit je v HTML.
+	// Tyto funkce můžeme volat přímo v HTML kódu (např. {{ .Value | deref }}).
 	funcMap := template.FuncMap{
 
-		// Funkce "deref": Bezpečný výpis pointeru.
-		// V Go šabloně {{.Value}} na pointer vypíše adresu paměti (0x...).
-		// My chceme hodnotu. Pokud je pointer nil, vrátíme 0.0, aby UI nespadlo.
+		// "deref": Bezpečně získá hodnotu z pointeru.
+		// Pokud je pointer nil (senzor neposlal data), vrátí 0.0.
 		"deref": func(f *float64) float64 {
 			if f == nil {
 				return 0.0
@@ -41,25 +51,24 @@ func NewWebHandler(client *APIClient, logger *slog.Logger) (*WebHandler, error) 
 			return *f
 		},
 
-		// Funkce "to_json": Klíčová pro předání dat do JavaScriptu.
-		// Go šablony automaticky "escapují" HTML znaky (prevence XSS).
-		// To by ale rozbilo JSON strukturu (změnilo uvozovky na &#34;).
-		// Typ template.JS říká šabloně: "Tomuto věř, toto je bezpečný JavaScript kód".
+		// "to_json": Serializuje Go strukturu na JSON string.
+		// Klíčové pro předání dat do JavaScriptu (Chart.js).
+		// template.JS říká šabloně: "Neescapuj uvozovky, toto je bezpečný skript".
 		"to_json": func(v interface{}) template.JS {
 			a, err := json.Marshal(v)
 			if err != nil {
-				// V případě chyby vrátíme prázdné pole, aby JS graf nespadl.
-				return template.JS("[]")
+				return template.JS("[]") // Fallback při chybě
 			}
 			return template.JS(a)
 		},
 	}
 
-	// 2. NAČTENÍ ŠABLONY PRO INDEX (Dashboard)
-	// Vytvoříme novou šablonu, pojmenujeme ji podle layoutu a naučíme ji funkce.
+	// 2. NAČTENÍ ŠABLON (Izolace)
+	// Pro každou stránku vytváříme samostatnou instanci Template.
+	// Tím řešíme problém, kdy obě stránky definují blok {{define "content"}}.
+
+	// A) Index (Dashboard)
 	indexTmpl := template.New("layout.html").Funcs(funcMap)
-	// ParseFiles načte POUZE vyjmenované soubory.
-	// Kombinujeme layout (hlavička/patička) a index (obsah).
 	indexTmpl, err := indexTmpl.ParseFiles(
 		filepath.Join("templates", "layout.html"),
 		filepath.Join("templates", "index.html"),
@@ -68,9 +77,7 @@ func NewWebHandler(client *APIClient, logger *slog.Logger) (*WebHandler, error) 
 		return nil, err
 	}
 
-	// 3. NAČTENÍ ŠABLONY PRO DETAIL (Graf)
-	// Opět vytvoříme zcela novou instanci. Tím zajistíme izolaci.
-	// Zde definice "content" z detail.html nepřepíše tu z index.html.
+	// B) Detail (Graf)
 	detailTmpl := template.New("layout.html").Funcs(funcMap)
 	detailTmpl, err = detailTmpl.ParseFiles(
 		filepath.Join("templates", "layout.html"),
@@ -88,56 +95,89 @@ func NewWebHandler(client *APIClient, logger *slog.Logger) (*WebHandler, error) 
 	}, nil
 }
 
-// HandleIndex obsluhuje hlavní stránku (GET /).
+// HandleIndex: Hlavní stránka (Dashboard)
 func (h *WebHandler) HandleIndex(w http.ResponseWriter, r *http.Request) {
-	// 1. Získání dat (Model)
+	// 1. Získání surových dat z API (seznam všech senzorů)
 	sensors, err := h.client.GetSensors()
 	if err != nil {
-		h.logger.Error("Chyba při volání API pro senzory", "error", err)
-		// Vrátíme 502 Bad Gateway, protože chyba není u nás, ale na backendu.
+		h.logger.Error("Chyba při volání API", "error", err)
 		http.Error(w, "Backend API je nedostupné", http.StatusBadGateway)
 		return
 	}
 
-	// 2. Příprava dat pro View (ViewModel)
-	data := map[string]interface{}{
-		"Title":   "IoT Dashboard",
-		"Sensors": sensors,
-		"Page":    "index", // Pro aktivní položku v menu
+	// 2. LOGIKA AGREGACE DAT PRO SYSTEM WIDGET
+	// Projdeme seznam senzorů a "vytaháme" z něj ty systémové podle MQTT topicu.
+	sysData := SystemWidgetData{}
+
+	for _, s := range sensors {
+		// Získáme hodnotu (dereference), pokud existuje.
+		val := 0.0
+		if s.CurrentValue != nil {
+			val = *s.CurrentValue
+		}
+
+		// Rozhodování podle Topiců (tyto topicy jsme definovali v DB).
+		switch s.Topic {
+		case "/msh/system/cpu":
+			sysData.CPUPercent = val
+			sysData.HasData = true // Našli jsme CPU, zapneme zobrazení widgetu
+		case "/msh/system/ram_used":
+			sysData.RamUsed = val
+		case "/msh/system/ram_total":
+			sysData.RamTotal = val
+		case "/msh/system/disk_used":
+			sysData.DiskUsed = val
+		case "/msh/system/disk_total":
+			sysData.DiskTotal = val
+		}
 	}
 
-	// 3. Renderování
-	// DŮLEŽITÉ: Používáme h.indexTmpl.
-	// Voláme "layout.html", což je název definovaný uvnitř souboru layout (define "layout.html").
-	// Layout pak zavolá {{template "content"}} který je definován v index.html.
+	// 3. DOPOČTY (Business Logic ve View Layeru)
+	// Grafy potřebují "Used" a "Free". Senzory posílají "Used" a "Total".
+	// Musíme dopočítat zbytek.
+	if sysData.RamTotal > 0 {
+		sysData.RamFree = sysData.RamTotal - sysData.RamUsed
+	}
+	if sysData.DiskTotal > 0 {
+		sysData.DiskFree = sysData.DiskTotal - sysData.DiskUsed
+	}
+
+	// 4. Příprava dat pro šablonu
+	data := map[string]interface{}{
+		"Title":      "IoT Dashboard",
+		"Sensors":    sensors, // Seznam všech senzorů (pro spodní část stránky)
+		"SystemInfo": sysData, // Data pro koláčové grafy
+		"Page":       "index",
+	}
+
+	// 5. Renderování
 	err = h.indexTmpl.ExecuteTemplate(w, "layout.html", data)
 	if err != nil {
-		h.logger.Error("Chyba renderování index šablony", "error", err)
+		h.logger.Error("Chyba renderování indexu", "error", err)
 	}
 }
 
-// HandleDetail obsluhuje stránku s grafem (GET /sensor/{id}).
+// HandleDetail: Stránka s grafem historie
 func (h *WebHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
-	// 1. Extrakce ID z URL (Go 1.22 feature PathValue)
+	// Extrakce ID z URL
 	idStr := r.PathValue("id")
 	id, _ := strconv.ParseInt(idStr, 10, 64)
 
-	// Získání parametru range (výchozí 24h)
+	// Range parametr
 	rng := r.URL.Query().Get("range")
 	if rng == "" {
 		rng = "24h"
 	}
 
-	// 2. Získání dat z API
+	// Stažení historie
 	points, err := h.client.GetHistory(id, rng)
 	if err != nil {
-		h.logger.Error("Chyba při volání API pro historii", "id", id, "error", err)
+		h.logger.Error("Chyba API historie", "error", err)
 		http.Error(w, "Chyba načítání dat", http.StatusInternalServerError)
 		return
 	}
 
-	// Potřebujeme i jméno senzoru. V produkci by API mělo mít endpoint /api/sensor/{id}.
-	// Pro výuku si zjednodušeně stáhneme seznam všech a najdeme ten náš.
+	// Dohledání metadat senzoru (jméno, jednotka)
 	allSensors, _ := h.client.GetSensors()
 	var currentSensor SensorDTO
 	for _, s := range allSensors {
@@ -155,10 +195,8 @@ func (h *WebHandler) HandleDetail(w http.ResponseWriter, r *http.Request) {
 		"Range":  rng,
 	}
 
-	// 3. Renderování
-	// DŮLEŽITÉ: Používáme h.detailTmpl. Zde "content" pochází z detail.html.
 	err = h.detailTmpl.ExecuteTemplate(w, "layout.html", data)
 	if err != nil {
-		h.logger.Error("Chyba renderování detail šablony", "error", err)
+		h.logger.Error("Chyba renderování detailu", "error", err)
 	}
 }

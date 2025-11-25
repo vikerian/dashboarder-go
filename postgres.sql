@@ -182,3 +182,11 @@ INSERT INTO sensors (sensor_type_id, mqtt_topic, friendly_name, is_active) VALUE
 ((SELECT id FROM sensor_types WHERE name = 'ram_usage'), '/msh/system/app_ram', 'IoT Stack RAM', true),
 -- DISK
 ((SELECT id FROM sensor_types WHERE name = 'disk_usage'), '/msh/system/disk_used', 'Root Disk Used', true);
+
+-- Registrace senzorů pro CELKOVOU kapacitu
+INSERT INTO sensors (sensor_type_id, mqtt_topic, friendly_name, is_active) VALUES 
+-- RAM Total
+((SELECT id FROM sensor_types WHERE name = 'ram_usage'), '/msh/system/ram_total', 'System RAM Total', true),
+-- Disk Total
+((SELECT id FROM sensor_types WHERE name = 'disk_usage'), '/msh/system/disk_total', 'System Disk Total', true)
+ON CONFLICT DO NOTHING;

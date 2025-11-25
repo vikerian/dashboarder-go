@@ -1,9 +1,116 @@
 {{define "content"}}
 
+{{if .SystemInfo.HasData}}
+<div class="row mb-5">
+    <div class="col-12">
+        <h3>Stav Systému (RPi)</h3>
+        <hr>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+            <h5>CPU Load</h5>
+            <div style="height: 200px; position: relative;">
+                <canvas id="chartCpu"></canvas>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; font-size: 1.2em;">
+                    {{printf "%.1f" .SystemInfo.CPUPercent}}%
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+            <h5>RAM Usage</h5>
+            <div style="height: 200px; position: relative;">
+                <canvas id="chartRam"></canvas>
+            </div>
+            <small class="text-muted mt-2">
+                {{printf "%.0f" .SystemInfo.RamUsed}} / {{printf "%.0f" .SystemInfo.RamTotal}} MB
+            </small>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center p-3">
+            <h5>Disk Usage</h5>
+            <div style="height: 200px; position: relative;">
+                <canvas id="chartDisk"></canvas>
+            </div>
+            <small class="text-muted mt-2">
+                {{printf "%.1f" .SystemInfo.DiskUsed}} / {{printf "%.1f" .SystemInfo.DiskTotal}} GB
+            </small>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Definice barev pro konzistentní vzhled
+    const colUsed = '#dc3545'; // Červená (Bootstrap Danger)
+    const colFree = '#198754'; // Zelená (Bootstrap Success)
+    const colIdle = '#e9ecef'; // Šedá (pro CPU idle)
+
+    // --- 1. CPU CHART (Doughnut) ---
+    // Zobrazuje Used vs Idle (100 - Used)
+    new Chart(document.getElementById('chartCpu'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Used', 'Idle'],
+            datasets: [{
+                // Data vkládáme přímo z Go šablony
+                data: [{{.SystemInfo.CPUPercent}}, 100 - {{.SystemInfo.CPUPercent}}],
+                backgroundColor: [colUsed, colIdle],
+                borderWidth: 0
+            }]
+        },
+        options: { 
+            cutout: '70%', // Velikost díry uprostřed
+            plugins: { legend: { display: false } } // Schováme legendu, číslo je uprostřed
+        }
+    });
+
+    // --- 2. RAM CHART ---
+    // Zobrazuje Used vs Free
+    new Chart(document.getElementById('chartRam'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Used', 'Free'],
+            datasets: [{
+                data: [{{.SystemInfo.RamUsed}}, {{.SystemInfo.RamFree}}],
+                backgroundColor: [colUsed, colFree],
+                borderWidth: 0
+            }]
+        },
+        options: { 
+            cutout: '60%', 
+            plugins: { legend: { position: 'bottom' } } 
+        }
+    });
+
+    // --- 3. DISK CHART ---
+    // Zobrazuje Used vs Free
+    new Chart(document.getElementById('chartDisk'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Used', 'Free'],
+            datasets: [{
+                data: [{{.SystemInfo.DiskUsed}}, {{.SystemInfo.DiskFree}}],
+                backgroundColor: [colUsed, colFree],
+                borderWidth: 0
+            }]
+        },
+        options: { 
+            cutout: '60%', 
+            plugins: { legend: { position: 'bottom' } } 
+        }
+    });
+</script>
+{{end}}
+
+
 <div class="row">
     <div class="col-12 mb-4">
-        <h2>Přehled senzorů</h2>
-        <p class="text-muted">Živá data načtená z API (zdroj: Valkey Cache)</p>
+        <h2>Seznam Senzorů</h2>
     </div>
 
     {{range .Sensors}}
@@ -23,27 +130,21 @@
                 </div>
 
                 <a href="/sensor/{{.ID}}" class="btn btn-outline-primary btn-sm">Graf Historie</a>
-                
-                <div class="mt-2 text-muted" style="font-size: 0.7em">
-                    Topic: <code>{{.Topic}}</code>
-                </div>
+                <div class="mt-2 text-muted" style="font-size: 0.7em">Topic: <code>{{.Topic}}</code></div>
             </div>
         </div>
     </div>
     {{else}}
-        <div class="col-12">
-            <div class="alert alert-warning">
-                ⚠️ Žádné senzory nebyly nalezeny. Běží služba home-api a databáze?
-            </div>
-        </div>
+    <div class="col-12">
+        <div class="alert alert-warning">Žádné senzory nebyly nalezeny.</div>
+    </div>
     {{end}}
 </div>
 
 <script>
-    // Obnov stránku každých 10 sekund (10000 ms)
     setTimeout(function(){
        window.location.reload();
-    }, 10000);
+    }, 10000); // 10 sekund
 </script>
 
 {{end}}
