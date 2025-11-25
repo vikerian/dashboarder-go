@@ -163,3 +163,22 @@ ALTER TABLE sensor_types ADD COLUMN max_value DOUBLE PRECISION;
 -- Příklad: nastavení limitů pro typ senzoru 'temperature' (předpokládáme ID=1)
 UPDATE sensor_types SET min_value = -30.0, max_value = 80.0 
 WHERE name = 'temperature';
+
+-- pridani system-monitoru
+-- 1. Nové typy měření
+INSERT INTO sensor_types (name, unit, description, min_value, max_value) VALUES 
+('cpu_load', '%', 'Zátěž procesoru', 0, 100),
+('ram_usage', 'MB', 'Využití paměti', 0, 64000), -- RPi má max 8GB, ale rezerva
+('disk_usage', 'GB', 'Využití disku', 0, 10000)
+ON CONFLICT DO NOTHING;
+
+-- 2. Registrace virtuálních senzorů (Topic -> ID)
+-- Tady definujeme mapování pro MQTT zprávy, které bude náš monitor posílat.
+INSERT INTO sensors (sensor_type_id, mqtt_topic, friendly_name, is_active) VALUES 
+-- CPU
+((SELECT id FROM sensor_types WHERE name = 'cpu_load'), '/msh/system/cpu', 'System CPU Load', true),
+-- RAM
+((SELECT id FROM sensor_types WHERE name = 'ram_usage'), '/msh/system/ram_used', 'System RAM Used', true),
+((SELECT id FROM sensor_types WHERE name = 'ram_usage'), '/msh/system/app_ram', 'IoT Stack RAM', true),
+-- DISK
+((SELECT id FROM sensor_types WHERE name = 'disk_usage'), '/msh/system/disk_used', 'Root Disk Used', true);

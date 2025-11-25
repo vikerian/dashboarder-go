@@ -2,7 +2,10 @@
 
 <div class="row mb-3 align-items-center">
     <div class="col-md-8">
-        <h2>{{.Sensor.Name}} <span class="text-muted fs-5">Historie</span></h2>
+        <h2>
+            {{.Sensor.Name}} 
+            <span class="text-muted fs-5">Historie</span>
+        </h2>
     </div>
     <div class="col-md-4 text-end">
         <div class="btn-group">
@@ -19,49 +22,66 @@
 </div>
 
 <script>
-    /*
-       OPRAVA: Použití funkce 'to_json'.
-       Původně: const rawData = {{ .Points }}; -> Vypisovalo Go strukturu (chyba syntaxe JS).
-       Nově:    const rawData = {{ .Points | to_json }}; -> Vypíše validní JSON string.
-       
-       Výsledek v prohlížeči bude vypadat takto:
-       const rawData = [{"t":"2025-11-24T20:00:00Z","v":24.5}, ...];
-    */
-    const rawData = {{ .Points | to_json }}; 
+    /* * PŘEDÁNÍ DAT Z GO (SERVER) DO JS (KLIENT)
+     * ========================================
+     * Toto je kritické místo. Go šablona se vykoná na serveru a "vytiskne"
+     * výsledek přímo do zdrojového kódu stránky, která letí do prohlížeče.
+     * * .Points je Go struktura ([]HistoryPoint).
+     * Pipe operator "|" předá tato data funkci "to_json", kterou jsme definovali v handleru.
+     * Ta zajistí, že výsledek bude validní JSON string (např. [{"t":"...","v":10}]).
+     * * Pokud bychom nepoužili to_json, Go by vypsalo svou string reprezentaci [{...}],
+     * což je pro JavaScript syntaktická chyba.
+     */
+    const rawData = {{ .Points | to_json }};
     
-    console.log("Data pro graf:", rawData); // Pro debugging v konzoli prohlížeče (F12)
+    // Debugging: Podívej se do konzole prohlížeče (F12), co přesně přišlo.
+    console.log("Data přijatá z backendu:", rawData);
 
     if (!rawData || rawData.length === 0) {
-        console.warn("Žádná data pro graf");
+        console.warn("Graf nemá žádná data k zobrazení.");
+        // Zde by se hodilo zobrazit uživateli hlášku "Žádná data".
     } else {
-        // ... zbytek skriptu beze změn ...
+        
+        // TRANSFORMACE DAT
+        // Chart.js potřebuje dvě oddělená pole: Labels (X) a Data (Y).
+        
+        // 1. Osa X (Labels): Formátování času
         const labels = rawData.map(p => {
-             // Pozor: Timestamp z JSONu je string, musíme udělat new Date()
+            // Datum z JSONu je string (ISO 8601), musíme ho převést na JS Date objekt.
             const d = new Date(p.t);
+            // Formátujeme na lokální čas (např. "14:30")
             return d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         });
-        
+
+        // 2. Osa Y (Data): Hodnoty
         const dataValues = rawData.map(p => p.v);
-        
+
+        // VYKRESLENÍ GRAFU
         const ctx = document.getElementById('historyChart');
         new Chart(ctx, {
-            type: 'line',
+            type: 'line', // Typ grafu
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Hodnota ({{.Sensor.Unit}})',
+                    label: 'Hodnota ({{.Sensor.Unit}})', // Go doplní jednotku
                     data: dataValues,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                    tension: 0.3,
-                    fill: true
+                    borderColor: 'rgb(75, 192, 192)', // Tyrkysová barva
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)', // Průhledná výplň
+                    borderWidth: 2,
+                    tension: 0.3, // "Curve tension" - 0 = lomená čára, 1 = velmi kulaté
+                    fill: true,
+                    pointRadius: 2
                 }]
             },
             options: {
-                responsive: true, 
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
-                    x: { display: true },
-                    y: { beginAtZero: false }
+                    x: { display: true, title: { display: true, text: 'Čas' } },
+                    y: { beginAtZero: false } // Graf se přizpůsobí rozsahu hodnot
+                },
+                plugins: {
+                    legend: { position: 'top' }
                 }
             }
         });
