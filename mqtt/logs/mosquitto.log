@@ -453,3 +453,42 @@
 1764063771: New client connected from 192.168.255.202:52100 as system-monitor (p2, c1, k30).
 1764063779: New connection from 192.168.255.193:56428 on port 1883.
 1764063779: New client connected from 192.168.255.193:56428 as LK313946D (p2, c1, k60).
+1764067084: Client auto-CFDFB26E-2720-4E93-E11C-9691BD75C7F0 disconnected.
+1764087299: Client data-persister disconnected.
+1764087299: Client log-collector disconnected.
+1764087299: Client system-monitor disconnected.
+1764087299: Client ingestor_service disconnected.
+1764087300: mosquitto version 2.0.22 terminating
+1764087328: mosquitto version 2.0.22 starting
+1764087328: Config loaded from /mosquitto/config/mosquitto.conf.
+1764087328: Opening ipv4 listen socket on port 1883.
+1764087328: Opening ipv6 listen socket on port 1883.
+1764087328: mosquitto version 2.0.22 running
+1764087328: New connection from 192.168.254.7:57190 on port 1883.
+1764087328: New client connected from 192.168.254.7:57190 as log-collector-service (p2, c1, k30).
+1764087328: New connection from 192.168.254.6:33226 on port 1883.
+1764087328: New client connected from 192.168.254.6:33226 as ingestor_service (p2, c1, k30).
+1764087328: New connection from 192.168.254.8:39858 on port 1883.
+1764087328: New client connected from 192.168.254.8:39858 as data-persister (p2, c1, k30).
+1764087328: New connection from 192.168.254.10:60668 on port 1883.
+1764087328: New client connected from 192.168.254.10:60668 as system-monitor (p2, c1, k30).
+1764087330: New connection from 192.168.254.1:44420 on port 1883.
+1764087330: New client connected from 192.168.254.1:44420 as LK313946D (p2, c1, k60).
+1764100639: mosquitto version 2.0.22 starting
+1764100639: Config loaded from /mosquitto/config/mosquitto.conf.
+1764100639: Opening ipv4 listen socket on port 1883.
+1764100639: Opening ipv6 listen socket on port 1883.
+1764100639: mosquitto version 2.0.22 running
+1764100639: New connection from 192.168.254.5:36086 on port 1883.
+1764100639: New client connected from 192.168.254.5:36086 as system-monitor (p2, c1, k30).
+1764100639: New connection from 192.168.254.6:38494 on port 1883.
+1764100639: New client connected from 192.168.254.6:38494 as ingestor_service (p2, c1, k30).
+1764100639: Client ingestor_service closed its connection.
+1764100639: New connection from 192.168.254.9:51596 on port 1883.
+1764100639: New client connected from 192.168.254.9:51596 as log-collector-service (p2, c1, k30).
+1764100639: New connection from 192.168.254.6:38508 on port 1883.
+1764100639: New client connected from 192.168.254.6:38508 as ingestor_service (p2, c1, k30).
+1764100639: New connection from 192.168.254.10:35292 on port 1883.
+1764100639: New client connected from 192.168.254.10:35292 as data-persister (p2, c1, k30).
+1764100642: New connection from 192.168.254.1:55774 on port 1883.
+1764100642: New client connected from 192.168.254.1:55774 as LK313946D (p2, c1, k60).

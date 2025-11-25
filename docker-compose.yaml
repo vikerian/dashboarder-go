@@ -161,5 +161,10 @@ services:
       - mqtt
     volumes:
       - "/srv/logs:/var/log/iot-app"
+    environment:
+      - MQTT_BROKER=tcp://mqtt:1883
+      - MQTT_CLIENT_ID=log-collector-service
+      - LOG_TOPIC=/logs/#
+      - LOG_DIR=/var/log/iot-app
     networks:
       appnet:
