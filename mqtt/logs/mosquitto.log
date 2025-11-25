@@ -317,3 +317,53 @@
 1764046529: New connection from 192.168.255.65:46662 on port 1883.
 1764046529: Client LK313946D already connected, closing old connection.
 1764046529: New client connected from 192.168.255.65:46662 as LK313946D (p2, c1, k60).
+1764052190: Client ingestor_service closed its connection.
+1764052227: Client data-persister closed its connection.
+1764052368: New connection from 192.168.255.71:37478 on port 1883.
+1764052369: New client connected from 192.168.255.71:37478 as data-persister (p2, c1, k30).
+1764052438: Client data-persister has exceeded timeout, disconnecting.
+1764052487: Client auto-D276C64C-F6FA-5622-DB26-ABDD4AFFF81B closed its connection.
+1764052902: New connection from 192.168.255.65:35564 on port 1883.
+1764052902: New connection from 192.168.255.65:35572 on port 1883.
+1764052902: New connection from 192.168.255.65:35588 on port 1883.
+1764053000: Client <unknown> has exceeded timeout, disconnecting.
+1764053000: Client <unknown> has exceeded timeout, disconnecting.
+1764053000: Client <unknown> has exceeded timeout, disconnecting.
+1764053095: New connection from 192.168.255.65:38330 on port 1883.
+1764053100: New connection from 192.168.255.65:55928 on port 1883.
+1764053100: New connection from 192.168.255.65:55936 on port 1883.
+1764053100: New connection from 192.168.255.65:55948 on port 1883.
+1764053100: New connection from 192.168.255.65:55964 on port 1883.
+1764053100: New connection from 192.168.255.65:55974 on port 1883.
+1764053100: New connection from 192.168.255.65:55980 on port 1883.
+1764053100: New connection from 192.168.255.65:55996 on port 1883.
+1764053100: New client connected from 192.168.255.65:38330 as auto-CDF37583-8828-BC79-4A77-5165DF7DB4E4 (p2, c1, k60).
+1764053100: Client auto-CDF37583-8828-BC79-4A77-5165DF7DB4E4 closed its connection.
+1764053100: New client connected from 192.168.255.65:55928 as auto-1ADA6698-2412-CFB3-99BE-40410A4AAB08 (p2, c1, k60).
+1764053100: New client connected from 192.168.255.65:55936 as auto-0A8AB2EF-1B93-9FCC-6228-EFDAA1D5813E (p2, c1, k60).
+1764053100: New client connected from 192.168.255.65:55948 as auto-05848B6F-D77C-DBF6-2AD1-CFC89DD2CA1B (p2, c1, k60).
+1764053100: New client connected from 192.168.255.65:55964 as auto-A28DC7B8-A8B2-EE38-471A-E4E4C3027CEC (p2, c1, k60).
+1764053100: New client connected from 192.168.255.65:55974 as auto-F142396C-923A-BB98-CE0F-F1960248F001 (p2, c1, k60).
+1764053100: New client connected from 192.168.255.65:55980 as auto-B194106F-84A4-FD05-AD65-B6520FD54965 (p2, c1, k60).
+1764053100: New client connected from 192.168.255.65:55996 as auto-744DDC0D-DB4A-6340-E912-E0571BCAB31A (p2, c1, k60).
+1764053100: Client auto-1ADA6698-2412-CFB3-99BE-40410A4AAB08 closed its connection.
+1764053100: Client auto-05848B6F-D77C-DBF6-2AD1-CFC89DD2CA1B closed its connection.
+1764053100: Client auto-A28DC7B8-A8B2-EE38-471A-E4E4C3027CEC closed its connection.
+1764053100: Client auto-F142396C-923A-BB98-CE0F-F1960248F001 closed its connection.
+1764053100: Client auto-B194106F-84A4-FD05-AD65-B6520FD54965 closed its connection.
+1764053100: Client auto-744DDC0D-DB4A-6340-E912-E0571BCAB31A closed its connection.
+1764053100: New connection from 192.168.255.71:38934 on port 1883.
+1764053100: New client connected from 192.168.255.71:38934 as data-persister (p2, c1, k30).
+1764053597: Client auto-0A8AB2EF-1B93-9FCC-6228-EFDAA1D5813E disconnected.
+1764053597: mosquitto version 2.0.22 terminating
+1764053603: mosquitto version 2.0.22 starting
+1764053603: Config loaded from /mosquitto/config/mosquitto.conf.
+1764053603: Opening ipv4 listen socket on port 1883.
+1764053603: Opening ipv6 listen socket on port 1883.
+1764053603: mosquitto version 2.0.22 running
+1764053604: New connection from 192.168.255.71:51520 on port 1883.
+1764053604: New client connected from 192.168.255.71:51520 as ingestor_service (p2, c1, k30).
+1764053604: New connection from 192.168.255.68:39594 on port 1883.
+1764053604: New client connected from 192.168.255.68:39594 as data-persister (p2, c1, k30).
+1764053618: New connection from 192.168.255.65:35122 on port 1883.
+1764053618: New client connected from 192.168.255.65:35122 as LK313946D (p2, c1, k60).
