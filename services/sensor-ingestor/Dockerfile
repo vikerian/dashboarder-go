@@ -4,7 +4,7 @@
 FROM golang:1.24-alpine AS builder
 
 # Instalace certifikátů (pro HTTPS) a gitu (pro stahování závislostí)
-RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificates
+RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificates 
 
 # Vytvoření neprivilegovaného uživatele 'appuser'
 # Toto je best-practice: v kontejneru nikdy neběžíme jako root, pokud nemusíme.
@@ -28,7 +28,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o ingestor .
 ##
 ## Stage 2: Runtime (Production Image)
 ##
-FROM scratch
+FROM alpine:3.21
+
+# Nainstalujeme curl
+RUN apk add --no-cache ca-certificates curl wget
 
 # Zkopírujeme certifikáty z builderu (nutné pro HTTPS volání nebo secure MQTT)
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/

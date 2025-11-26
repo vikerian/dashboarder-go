@@ -40,6 +40,8 @@ func main() {
 	slog.SetDefault(logger)
 
 	logger.Info("Ingestor startuje (Loguji do MQTT i Stdout)")
+	// 5. Spuštění Healthcheck serveru (pro Docker/K8s)
+	go startHealthServer(cfg.HTTPPort, logger)
 
 	logger.Info("Spouštím službu Sensor Ingestor", "config", cfg)
 
@@ -68,9 +70,6 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	go metaService.StartAutoRefresh(ctx)
-
-	// 5. Spuštění Healthcheck serveru (pro Docker/K8s)
-	go startHealthServer(cfg.HTTPPort, logger)
 
 	// 6. Nastavení MQTT Klienta
 	//opts := mqtt.NewClientOptions()

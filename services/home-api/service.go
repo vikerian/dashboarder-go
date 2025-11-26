@@ -80,7 +80,7 @@ func (s *Service) GetHistory(ctx context.Context, sensorID int64, durationStr st
 	}
 
 	// Vypočítáme čas "od kdy" chceme data (nyní minus duration)
-	startTime := time.Now().Add(-dur)
+	startTime := time.Now().UTC().Add(-dur)
 
 	// 2. SQL DOTAZ: TimescaleDB je optimalizovaná na časové řady.
 	// Index na (sensor_id, time) zajistí, že tento dotaz bude bleskový i při milionech řádků.
