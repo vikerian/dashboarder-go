@@ -532,3 +532,202 @@
 1764101713: New client connected from 192.168.255.137:47426 as system-monitor (p2, c1, k30).
 1764101715: New connection from 192.168.255.129:38446 on port 1883.
 1764101715: New client connected from 192.168.255.129:38446 as LK313946D (p2, c1, k60).
+1764530183: Client log-collector-service disconnected.
+1764530183: mosquitto version 2.0.22 terminating
+1764530189: mosquitto version 2.0.22 starting
+1764530189: Config loaded from /mosquitto/config/mosquitto.conf.
+1764530189: Opening ipv4 listen socket on port 1883.
+1764530189: Opening ipv6 listen socket on port 1883.
+1764530189: mosquitto version 2.0.22 running
+1764530190: New connection from 192.168.255.136:57774 on port 1883.
+1764530190: New client connected from 192.168.255.136:57774 as log-collector-service (p2, c1, k30).
+1764530190: New connection from 192.168.255.135:33292 on port 1883.
+1764530190: New client connected from 192.168.255.135:33292 as ingestor_service (p2, c1, k30).
+1764530190: New connection from 192.168.255.130:45920 on port 1883.
+1764530190: New client connected from 192.168.255.130:45920 as system-monitor (p2, c1, k30).
+1764530190: New connection from 192.168.255.131:48672 on port 1883.
+1764530190: New client connected from 192.168.255.131:48672 as data-persister (p2, c1, k30).
+1764530197: New connection from 192.168.255.129:50850 on port 1883.
+1764530197: New client connected from 192.168.255.129:50850 as LK313946D (p2, c1, k60).
+1764610344: New connection from 192.168.255.129:50916 on port 1883.
+1764610344: New client connected from 192.168.255.129:50916 as rpiconsole (p2, c1, k60).
+1764610356: Client rpiconsole disconnected.
+1764610358: New connection from 192.168.255.129:43196 on port 1883.
+1764610358: New client connected from 192.168.255.129:43196 as rpiconsole (p2, c1, k60).
+1764610409: Client rpiconsole disconnected.
+1764610453: Client log-collector-service disconnected.
+1764610453: Client data-persister disconnected.
+1764610453: Client system-monitor disconnected.
+1764610453: Client ingestor_service disconnected.
+1764610453: mosquitto version 2.0.22 terminating
+1764610458: mosquitto version 2.0.22 starting
+1764610458: Config loaded from /mosquitto/config/mosquitto.conf.
+1764610458: Opening ipv4 listen socket on port 1883.
+1764610458: Opening ipv6 listen socket on port 1883.
+1764610458: mosquitto version 2.0.22 running
+1764610458: New connection from 192.168.255.70:49682 on port 1883.
+1764610458: New client connected from 192.168.255.70:49682 as ingestor_service (p2, c1, k30).
+1764610458: New connection from 192.168.255.71:60548 on port 1883.
+1764610458: New client connected from 192.168.255.71:60548 as data-persister (p2, c1, k30).
+1764610459: New connection from 192.168.255.72:41040 on port 1883.
+1764610459: New client connected from 192.168.255.72:41040 as log-collector-service (p2, c1, k30).
+1764610459: New connection from 192.168.255.74:59462 on port 1883.
+1764610459: New client connected from 192.168.255.74:59462 as system-monitor (p2, c1, k30).
+1764610470: New connection from 192.168.255.65:41508 on port 1883.
+1764610470: New client connected from 192.168.255.65:41508 as LK313946D (p2, c1, k60).
+1764611807: Client data-persister disconnected.
+1764611807: Client log-collector-service disconnected.
+1764611807: Client system-monitor disconnected.
+1764611807: Client ingestor_service disconnected.
+1764611807: mosquitto version 2.0.22 terminating
+1764611835: mosquitto version 2.0.22 starting
+1764611835: Config loaded from /mosquitto/config/mosquitto.conf.
+1764611835: Opening ipv4 listen socket on port 1883.
+1764611835: Opening ipv6 listen socket on port 1883.
+1764611835: mosquitto version 2.0.22 running
+1764611836: New connection from 192.168.255.133:41384 on port 1883.
+1764611836: New client connected from 192.168.255.133:41384 as log-collector-service (p2, c1, k30).
+1764611836: New connection from 192.168.255.136:41914 on port 1883.
+1764611836: New client connected from 192.168.255.136:41914 as ingestor_service (p2, c1, k30).
+1764611836: New connection from 192.168.255.135:41272 on port 1883.
+1764611836: New client connected from 192.168.255.135:41272 as data-persister (p2, c1, k30).
+1764611836: New connection from 192.168.255.137:41134 on port 1883.
+1764611836: New client connected from 192.168.255.137:41134 as system-monitor (p2, c1, k30).
+1764611850: New connection from 192.168.255.129:48968 on port 1883.
+1764611850: New client connected from 192.168.255.129:48968 as LK313946D (p2, c1, k60).
+1764612018: mosquitto version 2.0.22 terminating
+1764612170: mosquitto version 2.0.22 starting
+1764612170: Config loaded from /mosquitto/config/mosquitto.conf.
+1764612170: Opening ipv4 listen socket on port 1883.
+1764612170: Opening ipv6 listen socket on port 1883.
+1764612170: mosquitto version 2.0.22 running
+1764612170: New connection from 192.168.255.133:51746 on port 1883.
+1764612170: New client connected from 192.168.255.133:51746 as log-collector-service (p2, c1, k30).
+1764612170: New connection from 192.168.255.135:41538 on port 1883.
+1764612170: New client connected from 192.168.255.135:41538 as ingestor_service (p2, c1, k30).
+1764612170: New connection from 192.168.255.136:40228 on port 1883.
+1764612170: New client connected from 192.168.255.136:40228 as data-persister (p2, c1, k30).
+1764612171: New connection from 192.168.255.138:59406 on port 1883.
+1764612171: New client connected from 192.168.255.138:59406 as system-monitor (p2, c1, k30).
+1764612180: New connection from 192.168.255.129:42624 on port 1883.
+1764612180: New client connected from 192.168.255.129:42624 as LK313946D (p2, c1, k60).
+1764612208: Client system-monitor disconnected.
+1764612208: Client data-persister disconnected.
+1764612208: Client log-collector-service disconnected.
+1764612209: Client ingestor_service disconnected.
+1764612209: mosquitto version 2.0.22 terminating
+1764612275: mosquitto version 2.0.22 starting
+1764612275: Config loaded from /mosquitto/config/mosquitto.conf.
+1764612275: Opening ipv4 listen socket on port 1883.
+1764612275: Opening ipv6 listen socket on port 1883.
+1764612275: mosquitto version 2.0.22 running
+1764612275: New connection from 192.168.255.197:60068 on port 1883.
+1764612275: New client connected from 192.168.255.197:60068 as log-collector-service (p2, c1, k30).
+1764612276: New connection from 192.168.255.199:48380 on port 1883.
+1764612276: New client connected from 192.168.255.199:48380 as ingestor_service (p2, c1, k30).
+1764612276: New connection from 192.168.255.200:52594 on port 1883.
+1764612276: New client connected from 192.168.255.200:52594 as data-persister (p2, c1, k30).
+1764612276: New connection from 192.168.255.202:56774 on port 1883.
+1764612276: New client connected from 192.168.255.202:56774 as system-monitor (p2, c1, k30).
+1764612300: New connection from 192.168.255.193:58286 on port 1883.
+1764612300: New client connected from 192.168.255.193:58286 as LK313946D (p2, c1, k60).
+1764612362: Client log-collector-service disconnected.
+1764612362: Client data-persister disconnected.
+1764612362: Client ingestor_service disconnected.
+1764612362: Client system-monitor disconnected.
+1764612362: mosquitto version 2.0.22 terminating
+1764612369: mosquitto version 2.0.22 starting
+1764612369: Config loaded from /mosquitto/config/mosquitto.conf.
+1764612369: Opening ipv4 listen socket on port 1883.
+1764612369: Opening ipv6 listen socket on port 1883.
+1764612369: mosquitto version 2.0.22 running
+1764612369: New connection from 192.168.255.195:40226 on port 1883.
+1764612369: New client connected from 192.168.255.195:40226 as system-monitor (p2, c1, k30).
+1764612369: New connection from 192.168.255.196:41052 on port 1883.
+1764612369: New client connected from 192.168.255.196:41052 as ingestor_service (p2, c1, k30).
+1764612369: New connection from 192.168.255.194:44344 on port 1883.
+1764612369: New client connected from 192.168.255.194:44344 as data-persister (p2, c1, k30).
+1764612370: New connection from 192.168.255.197:51696 on port 1883.
+1764612370: New client connected from 192.168.255.197:51696 as log-collector-service (p2, c1, k30).
+1764612370: New connection from 192.168.255.193:60396 on port 1883.
+1764612370: New client connected from 192.168.255.193:60396 as LK313946D (p2, c1, k60).
+1764612492: Client data-persister disconnected.
+1764612492: Client log-collector-service disconnected.
+1764612492: Client system-monitor disconnected.
+1764612493: Client ingestor_service disconnected.
+1764612493: mosquitto version 2.0.22 terminating
+1764612509: mosquitto version 2.0.22 starting
+1764612509: Config loaded from /mosquitto/config/mosquitto.conf.
+1764612509: Opening ipv4 listen socket on port 1883.
+1764612509: Opening ipv6 listen socket on port 1883.
+1764612509: mosquitto version 2.0.22 running
+1764612510: New connection from 192.168.255.70:43950 on port 1883.
+1764612510: New client connected from 192.168.255.70:43950 as ingestor_service (p2, c1, k30).
+1764612510: New connection from 192.168.255.69:49006 on port 1883.
+1764612510: New client connected from 192.168.255.69:49006 as log-collector-service (p2, c1, k30).
+1764612510: New connection from 192.168.255.72:44788 on port 1883.
+1764612510: New client connected from 192.168.255.72:44788 as data-persister (p2, c1, k30).
+1764612510: New connection from 192.168.255.73:51418 on port 1883.
+1764612510: New client connected from 192.168.255.73:51418 as system-monitor (p2, c1, k30).
+1764612510: New connection from 192.168.255.65:35932 on port 1883.
+1764612510: New client connected from 192.168.255.65:35932 as LK313946D (p2, c1, k60).
+1764612612: Client log-collector-service disconnected.
+1764612612: Client data-persister disconnected.
+1764612612: Client system-monitor disconnected.
+1764612612: Client ingestor_service disconnected.
+1764612612: mosquitto version 2.0.22 terminating
+1764613092: mosquitto version 2.0.22 starting
+1764613092: Config loaded from /mosquitto/config/mosquitto.conf.
+1764613092: Opening ipv4 listen socket on port 1883.
+1764613092: Opening ipv6 listen socket on port 1883.
+1764613092: mosquitto version 2.0.22 running
+1764613092: New connection from 192.168.255.69:49680 on port 1883.
+1764613092: New client connected from 192.168.255.69:49680 as log-collector-service (p2, c1, k30).
+1764613092: New connection from 192.168.255.70:45442 on port 1883.
+1764613092: New client connected from 192.168.255.70:45442 as ingestor_service (p2, c1, k30).
+1764613092: New connection from 192.168.255.71:43362 on port 1883.
+1764613092: New client connected from 192.168.255.71:43362 as data-persister (p2, c1, k30).
+1764613093: New connection from 192.168.255.73:56984 on port 1883.
+1764613093: New client connected from 192.168.255.73:56984 as system-monitor (p2, c1, k30).
+1764613110: New connection from 192.168.255.65:44620 on port 1883.
+1764613110: New client connected from 192.168.255.65:44620 as LK313946D (p2, c1, k60).
+1764615461: Client log-collector-service disconnected.
+1764615461: Client system-monitor disconnected.
+1764615461: Client data-persister disconnected.
+1764615462: Client ingestor_service disconnected.
+1764615462: mosquitto version 2.0.22 terminating
+1764615467: mosquitto version 2.0.22 starting
+1764615467: Config loaded from /mosquitto/config/mosquitto.conf.
+1764615467: Opening ipv4 listen socket on port 1883.
+1764615467: Opening ipv6 listen socket on port 1883.
+1764615467: mosquitto version 2.0.22 running
+1764615468: New connection from 192.168.255.133:42018 on port 1883.
+1764615468: New client connected from 192.168.255.133:42018 as log-collector-service (p2, c1, k30).
+1764615468: New connection from 192.168.255.134:56594 on port 1883.
+1764615468: New client connected from 192.168.255.134:56594 as data-persister (p2, c1, k30).
+1764615468: New connection from 192.168.255.136:56622 on port 1883.
+1764615468: New client connected from 192.168.255.136:56622 as ingestor_service (p2, c1, k30).
+1764615469: New connection from 192.168.255.138:45514 on port 1883.
+1764615469: New client connected from 192.168.255.138:45514 as system-monitor (p2, c1, k30).
+1764615480: New connection from 192.168.255.129:40578 on port 1883.
+1764615480: New client connected from 192.168.255.129:40578 as LK313946D (p2, c1, k60).
+1764615519: Client data-persister disconnected.
+1764615519: Client ingestor_service disconnected.
+1764615519: Client system-monitor disconnected.
+1764615519: Client log-collector-service disconnected.
+1764615519: mosquitto version 2.0.22 terminating
+1764615522: mosquitto version 2.0.22 starting
+1764615522: Config loaded from /mosquitto/config/mosquitto.conf.
+1764615522: Opening ipv4 listen socket on port 1883.
+1764615522: Opening ipv6 listen socket on port 1883.
+1764615522: mosquitto version 2.0.22 running
+1764615522: New connection from 192.168.255.130:36024 on port 1883.
+1764615522: New client connected from 192.168.255.130:36024 as log-collector-service (p2, c1, k30).
+1764615522: New connection from 192.168.255.135:50690 on port 1883.
+1764615522: New client connected from 192.168.255.135:50690 as data-persister (p2, c1, k30).
+1764615522: New connection from 192.168.255.136:53124 on port 1883.
+1764615522: New client connected from 192.168.255.136:53124 as ingestor_service (p2, c1, k30).
+1764615522: New connection from 192.168.255.133:55124 on port 1883.
+1764615522: New client connected from 192.168.255.133:55124 as system-monitor (p2, c1, k30).
+1764615540: New connection from 192.168.233.20:49197 on port 1883.
+1764615540: New client connected from 192.168.233.20:49197 as LK313946D (p2, c1, k60).
