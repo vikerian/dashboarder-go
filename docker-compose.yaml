@@ -46,107 +46,125 @@ services:
     networks:
       appnet:
 
-  sensor-ingestor:
-    build:
-      context: ./services/sensor-ingestor
-      dockerfile: Dockerfile
-    container_name: sensor-ingestor
-    restart: unless-stopped
-    depends_on:
-      - mqtt
-      - timescaledb
-    environment:
-      - "POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db"
-      - "MQTT_BROKER=tcp://mqtt:1883"
-      - "MQTT_CLIENT_ID=ingestor_service"
-      - "INPUT_TOPIC=/msh/#"
-      - "OUTPUT_TOPIC=/events/data"
-      - "LOG_LEVEL=DEBUG"
-    # Healthcheck volá náš Go endpoint /health
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://mqtt:8080/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-    networks:
-      appnet:
-
-  data-persister:
-    build:
-      context: ./services/data-persister
-      dockerfile: Dockerfile
-    container_name: data-persister
-    restart: unless-stopped
-    depends_on:
-      - mqtt
-      - timescaledb  # Musí počkat na DB
-      - valkeydb       # Musí počkat na Redis
-    environment:
-      - MQTT_BROKER=tcp://mqtt:1883
-      - INPUT_TOPIC=/events/data
-      # Uprav 'timescaledb' a 'valkey' podle názvů tvých služeb v compose file!
-      - POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db
-      - VALKEY_ADDR=valkeydb:6379
-      - LOG_LEVEL=debug
-    networks:
-      appnet:
-
-  home-api:
-    build:
-      context: ./services/home-api
-      dockerfile: Dockerfile
-    container_name: home-api
-    restart: unless-stopped
-    depends_on:
-      - timescaledb
-      - valkeydb
-    environment:
-      - HTTP_PORT=8880
-      - POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db
-      - VALKEY_ADDR=valkeydb:6379
-      - LOG_LEVEL=debug
-    # Mapujeme port 8080 z kontejneru na 8080 na hostovi, 
-    # abys mohl API volat z prohlížeče na localhost:8080
-    ports:
-      - "8880:8880"
-    networks:
-      appnet:
-
-  web-dashboard:
-    build:
-      context: ./services/web-dashboard
-      dockerfile: Dockerfile
-    container_name: web-dashboard
-    restart: unless-stopped
-    depends_on:
-      - home-api # Čekáme, až naběhne backend
-    environment:
-      # Port, na kterém poslouchá Go server uvnitř kontejneru
-      - HTTP_PORT=3000
-      # Adresa backendu. Důležité: Používáme název služby 'home-api' z tohoto souboru!
-      # Docker interní DNS to přeloží na správnou IP adresu.
-      - API_URL=http://home-api:8880
-    ports:
-      # Mapování host:container.
-      # Aplikaci uvidíš na http://localhost:3000
-      - "3000:3000"
-    networks:
-      appnet:
-  
-  system-monitor:
-    build:
-      context: ./services/system-monitor
-      dockerfile: Dockerfile
-    container_name: system-monitor
-    restart: unless-stopped
-    depends_on:
-      - mqtt
-      - sensor-ingestor # Abychom neposílali data dřív, než je ingestor ready
-    environment:
-      - MQTT_BROKER=tcp://mqtt:1883
-      - MONITOR_INTERVAL=60s
-    # TOTO JE KLÍČOVÉ: Zpřístupní procesy hostitele kontejneru.
-    # Bez toho by gopsutil viděl jen sebe sama (PID 1).
-    pid: "host"
-    networks:
-      appnet:
+#  sensor-ingestor:
+#    build:
+#      context: ./services/sensor-ingestor
+#      dockerfile: Dockerfile
+#    container_name: sensor-ingestor
+#    restart: unless-stopped
+#    depends_on:
+#      - mqtt
+#      - timescaledb
+#    environment:
+#      - "POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db"
+#      - "MQTT_BROKER=tcp://mqtt:1883"
+#      - "MQTT_CLIENT_ID=ingestor_service"
+#      - "INPUT_TOPIC=/msh/#"
+#      - "OUTPUT_TOPIC=/events/data"
+#      - "LOG_LEVEL=DEBUG"
+#    # Healthcheck volá náš Go endpoint /health
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://mqtt:8080/health"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+#    networks:
+#      appnet:
+#
+#  data-persister:
+#    build:
+#      context: ./services/data-persister
+#      dockerfile: Dockerfile
+#    container_name: data-persister
+#    restart: unless-stopped
+#    depends_on:
+#      - mqtt
+#      - timescaledb  # Musí počkat na DB
+#      - valkeydb       # Musí počkat na Redis
+#    environment:
+#      - MQTT_BROKER=tcp://mqtt:1883
+#      - INPUT_TOPIC=/events/data
+#      # Uprav 'timescaledb' a 'valkey' podle názvů tvých služeb v compose file!
+#      - POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db
+#      - VALKEY_ADDR=valkeydb:6379
+#      - LOG_LEVEL=debug
+#    networks:
+#      appnet:
+#
+#  home-api:
+#    build:
+#      context: ./services/home-api
+#      dockerfile: Dockerfile
+#    container_name: home-api
+#    restart: unless-stopped
+#    depends_on:
+#      - timescaledb
+#      - valkeydb
+#    environment:
+#      - HTTP_PORT=8880
+#      - POSTGRES_URL=postgres://root:pgpwpass@pgsql18:5432/iot_db
+#      - VALKEY_ADDR=valkeydb:6379
+#      - LOG_LEVEL=debug
+#    # Mapujeme port 8080 z kontejneru na 8080 na hostovi, 
+#    # abys mohl API volat z prohlížeče na localhost:8080
+#    ports:
+#      - "8880:8880"
+#    networks:
+#      appnet:
+#
+#  web-dashboard:
+#    build:
+#      context: ./services/web-dashboard
+#      dockerfile: Dockerfile
+#    container_name: web-dashboard
+#    restart: unless-stopped
+#    depends_on:
+#      - home-api # Čekáme, až naběhne backend
+#    environment:
+#      # Port, na kterém poslouchá Go server uvnitř kontejneru
+#      - HTTP_PORT=3000
+#      # Adresa backendu. Důležité: Používáme název služby 'home-api' z tohoto souboru!
+#      # Docker interní DNS to přeloží na správnou IP adresu.
+#      - API_URL=http://home-api:8880
+#    ports:
+#      # Mapování host:container.
+#      # Aplikaci uvidíš na http://localhost:3000
+#      - "3000:3000"
+#    networks:
+#      appnet:
+#  
+#  system-monitor:
+#    build:
+#      context: ./services/system-monitor
+#      dockerfile: Dockerfile
+#    container_name: system-monitor
+#    restart: unless-stopped
+#    depends_on:
+#      - mqtt
+#      - sensor-ingestor # Abychom neposílali data dřív, než je ingestor ready
+#    environment:
+#      - MQTT_BROKER=tcp://mqtt:1883
+#      - MONITOR_INTERVAL=60s
+#    # TOTO JE KLÍČOVÉ: Zpřístupní procesy hostitele kontejneru.
+#    # Bez toho by gopsutil viděl jen sebe sama (PID 1).
+#    pid: "host"
+#    networks:
+#      appnet:
+#
+#  log-collector:
+#    build:
+#      context: ./services/log-collector
+#      dockerfile: Dockerfile
+#    container_name: log-collector
+#    restart: unless-stopped
+#    depends_on: 
+#      - mqtt
+#    volumes:
+#      - "/srv/logs:/var/log/iot-app"
+#    environment:
+#      - MQTT_BROKER=tcp://mqtt:1883
+#      - MQTT_CLIENT_ID=log-collector-service
+#      - LOG_TOPIC=/logs/#
+#      - LOG_DIR=/var/log/iot-app
+#    networks:
+#      appnet:

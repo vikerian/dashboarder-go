@@ -42,7 +42,7 @@ func main() {
 
 	// 5. Inicializace komponent (Wiring)
 	// Vytvoříme službu s připojenými DB
-	svc := NewService(dbPool, rdb)
+	svc := NewService(dbPool, rdb, &slog.Logger{})
 	// Vytvoříme API handler, který používá službu
 	api := NewAPIHandler(svc, logger)
 
